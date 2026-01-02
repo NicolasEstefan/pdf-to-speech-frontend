@@ -1,1 +1,5 @@
 @import 'tailwindcss';
+
+.left-[\-100\%] {
+  left: -100%;
+}

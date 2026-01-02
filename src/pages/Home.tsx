@@ -1,9 +1,7 @@
-import SignInWithGoogleButton from '../components/SignInWithGoogleButton'
+import { useGetMeQuery } from '../store'
 
 export default function HomePage() {
-  return (
-    <div>
-      <SignInWithGoogleButton />
-    </div>
-  )
+  const { data } = useGetMeQuery()
+
+  return <div>{data && `Bienvenido/a ${data.username}`}</div>
 }
