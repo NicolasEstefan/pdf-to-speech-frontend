@@ -15,15 +15,20 @@ export const userApi = createApi({
     return {
       getMe: builder.query<User, void>({
         providesTags: ['GET_ME'],
-        query: () => {
-          return {
-            url: '/users/me',
-            method: 'GET'
-          }
-        }
+        query: () => ({
+          url: '/users/me',
+          method: 'GET'
+        })
+      }),
+      logout: builder.mutation<void, void>({
+        invalidatesTags: ['GET_ME'],
+        query: () => ({
+          url: '/auth/logout',
+          method: 'POST'
+        })
       })
     }
   }
 })
 
-export const { useGetMeQuery } = userApi
+export const { useGetMeQuery, useLogoutMutation } = userApi

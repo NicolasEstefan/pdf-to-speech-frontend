@@ -1,7 +1,7 @@
-import { useGetMeQuery } from '../store'
+import { useUser } from '../store/apis/hooks/use-user'
 
 export default function HomePage() {
-  const { data } = useGetMeQuery()
+  const { user } = useUser()
 
-  return <div>{data && `Bienvenido/a ${data.username}`}</div>
+  return <div>{user && `Bienvenido/a ${user.username}`}</div>
 }

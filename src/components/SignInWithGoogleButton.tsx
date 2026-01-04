@@ -1,15 +1,23 @@
-import { useGetMeQuery } from '../store'
+import { useLogoutMutation } from '../store'
+import { useUser } from '../store/apis/hooks/use-user'
 import Button from './common/Button'
 import { IconBrandGoogleFilled } from '@tabler/icons-react'
 
 export default function SignInWithGoogleButton() {
-  const { data } = useGetMeQuery()
+  const { user, isFetching } = useUser()
+  const [logout, logoutResults] = useLogoutMutation()
 
   const handleSignIn = () => {
     window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`
   }
 
-  const handleSignOut = () => {}
+  const handleSignOut = async () => {
+    await logout()
+  }
+
+  if (isFetching) {
+    return
+  }
 
   const signInButton = (
     <Button
@@ -21,10 +29,14 @@ export default function SignInWithGoogleButton() {
   )
 
   const signOutButton = (
-    <Button onClick={handleSignOut} className='font-semibold'>
+    <Button
+      onClick={handleSignOut}
+      disabled={logoutResults.isLoading}
+      className='font-semibold'
+    >
       Cerrar sesión
     </Button>
   )
 
-  return data ? signOutButton : signInButton
+  return user ? signOutButton : signInButton
 }

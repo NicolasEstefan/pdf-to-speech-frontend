@@ -1,5 +1,4 @@
 import { Outlet } from 'react-router-dom'
-import { useGetMeQuery } from '../store'
 import GenerationsList from '../components/generations/GenerationsList'
 import { IconLayoutSidebarFilled } from '@tabler/icons-react'
 import SignInWithGoogleButton from '../components/SignInWithGoogleButton'
@@ -8,7 +7,6 @@ import Button from '../components/common/Button'
 
 export default function Layout() {
   const [showSideBar, setShowSidebar] = useState(false)
-  const { isFetching, isError, data } = useGetMeQuery()
 
   const handleButtonClick = () => {
     setShowSidebar((previous) => !previous)
