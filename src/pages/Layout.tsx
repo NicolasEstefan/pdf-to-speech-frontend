@@ -13,25 +13,17 @@ export default function Layout() {
   }
 
   return (
-    <div className='relative flex flex-col  md:grid md:grid-cols-[20%_80%] h-screen w-full bg-purple-50'>
+    <div className="relative z-0 flex h-screen w-full flex-col bg-purple-50 md:grid md:grid-cols-[20%_80%]">
+      <div className={`${!showSideBar && 'hidden'} fixed inset-0 z-0 bg-black opacity-40`} />
       <div
-        className={`${!showSideBar && 'hidden'} fixed bg-black inset-0 opacity-40`}
-      />
-      <div
-        className={`fixed ${showSideBar ? 'left-0' : '-left-full'} transition-all md:relative flex flex-col items-end gap-2 md:left-0 p-6 w-full h-screen col-1`}
+        className={`fixed ${showSideBar ? 'left-0' : '-left-full'} col-1 mt-[17%] flex h-[90%] w-full flex-col items-end gap-2 p-6 transition-all md:relative md:left-0 md:mt-0 md:h-screen`}
       >
-        <Button className='p-3 md:hidden' onClick={() => setShowSidebar(false)}>
-          <IconX stroke={2} width={32} height={32} />
-        </Button>
         <GenerationsList />
       </div>
-      <div className='col-2 flex flex-col gap-2'>
-        <div className='p-3 flex justify-between md:justify-end h-fit w-full'>
-          <Button
-            onClick={handleButtonClick}
-            className='md:hidden rounded-full'
-          >
-            <IconLayoutSidebarFilled size={35} />
+      <div className="col-2 flex flex-col gap-2">
+        <div className="z-1 flex h-fit w-full justify-between p-3 md:justify-end">
+          <Button onClick={handleButtonClick} className="rounded-full md:hidden">
+            {showSideBar ? <IconX size={35} /> : <IconLayoutSidebarFilled size={35} />}
           </Button>
           <SignInWithGoogleButton />
         </div>
