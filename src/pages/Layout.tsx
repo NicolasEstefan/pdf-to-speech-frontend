@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import GenerationsList from '../components/generations/GenerationsList'
-import { IconLayoutSidebarFilled } from '@tabler/icons-react'
+import { IconLayoutSidebarFilled, IconX } from '@tabler/icons-react'
 import SignInWithGoogleButton from '../components/SignInWithGoogleButton'
 import { useState } from 'react'
 import Button from '../components/common/Button'
@@ -13,14 +13,16 @@ export default function Layout() {
   }
 
   return (
-    <div className='relative flex flex-col  md:grid md:grid-cols-[15%_85%] h-screen w-full bg-purple-50'>
+    <div className='relative flex flex-col  md:grid md:grid-cols-[20%_80%] h-screen w-full bg-purple-50'>
       <div
-        className={`${!showSideBar && 'hidden'} fixed bg-black inset-0 opacity-20`}
-        onClick={() => setShowSidebar(false)}
+        className={`${!showSideBar && 'hidden'} fixed bg-black inset-0 opacity-40`}
       />
       <div
-        className={`fixed ${showSideBar ? 'left-0' : '-left-full'} transition-all md:block md:left-0`}
+        className={`fixed ${showSideBar ? 'left-0' : '-left-full'} transition-all md:relative flex flex-col items-end gap-2 md:left-0 p-6 w-full h-screen col-1`}
       >
+        <Button className='p-3 md:hidden' onClick={() => setShowSidebar(false)}>
+          <IconX stroke={2} width={32} height={32} />
+        </Button>
         <GenerationsList />
       </div>
       <div className='col-2 flex flex-col gap-2'>

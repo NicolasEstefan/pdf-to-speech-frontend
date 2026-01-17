@@ -3,6 +3,7 @@ import Layout from './pages/Layout'
 import HomePage from './pages/Home'
 import { Provider } from 'react-redux'
 import { store } from './store'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const router = createBrowserRouter([
   {

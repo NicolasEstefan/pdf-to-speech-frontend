@@ -13,6 +13,7 @@ export default function SignInWithGoogleButton() {
 
   const handleSignOut = async () => {
     await logout()
+    window.location.reload()
   }
 
   if (isFetching) {
@@ -20,20 +21,13 @@ export default function SignInWithGoogleButton() {
   }
 
   const signInButton = (
-    <Button
-      onClick={handleSignIn}
-      className='flex gap-2 items-center justify-center font-semibold'
-    >
+    <Button onClick={handleSignIn} className="flex items-center justify-center gap-2 font-semibold">
       <IconBrandGoogleFilled width={35} /> Continuar con Google
     </Button>
   )
 
   const signOutButton = (
-    <Button
-      onClick={handleSignOut}
-      disabled={logoutResults.isLoading}
-      className='font-semibold'
-    >
+    <Button onClick={handleSignOut} disabled={logoutResults.isLoading} className="font-semibold">
       Cerrar sesión
     </Button>
   )

@@ -1,10 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { baseQueryWithReauth } from './base-query'
-
-interface User {
-  id: string
-  username: string
-}
+import type { User } from '../types/user'
 
 export const userApiTags = ['GET_ME'] as const
 export const userApi = createApi({

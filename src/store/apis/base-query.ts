@@ -24,7 +24,6 @@ export const baseQueryWithReauth: BaseQueryFn<
   extraOptions: object
 ) => {
   await mutex.waitForUnlock()
-
   let result = await baseQuery(args, api, extraOptions)
 
   if (result.error?.status === 401) {
