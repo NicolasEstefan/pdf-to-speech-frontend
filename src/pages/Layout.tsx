@@ -21,7 +21,7 @@ export default function Layout() {
         <GenerationsList />
       </div>
       <div className="col-2 flex flex-col gap-2">
-        <div className="z-1 flex h-fit w-full justify-between p-3 md:justify-end">
+        <div className="z-1 flex h-fit w-full justify-between px-6 py-3 md:justify-end">
           <Button onClick={handleButtonClick} className="rounded-full md:hidden">
             {showSideBar ? <IconX size={35} /> : <IconLayoutSidebarFilled size={35} />}
           </Button>
