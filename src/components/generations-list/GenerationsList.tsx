@@ -1,41 +1,36 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { useGetGenerationsQuery } from '../../store'
+import { useEffect, useRef, type ReactNode } from 'react'
+import { useGetGenerationsInfiniteQuery } from '../../store'
 import { useUser } from '../../store/apis/hooks/use-user'
 import GenerationListItem from './GenerationListItem'
 import GenerationListItemSkeleton from './GenerationListItemSkeleton'
 
 export default function GenerationsList() {
-  const [page, setPage] = useState(1)
   const sentinelRef = useRef<HTMLDivElement | null>(null)
 
   const { user, isLoading: isLoadingUser } = useUser()
   const {
-    isFetching,
+    isFetchingNextPage,
+    hasNextPage,
     isLoading: isLoadingGenerations,
     data: generationsResponse,
     error,
-  } = useGetGenerationsQuery(
-    {
-      page,
-      pageSize: 10,
-    },
-    { skip: !user }
-  )
+    fetchNextPage,
+  } = useGetGenerationsInfiniteQuery()
 
   useEffect(() => {
-    if (!sentinelRef.current || !user || page === generationsResponse?.totalPages) {
+    if (!sentinelRef.current || !user || !hasNextPage) {
       return
     }
 
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !isFetching) {
-        setPage((previous) => previous + 1)
+      if (entry.isIntersecting && !isFetchingNextPage) {
+        fetchNextPage()
       }
     })
 
     observer.observe(sentinelRef.current)
     return () => observer.disconnect()
-  }, [isFetching, generationsResponse?.totalPages, user])
+  }, [isFetchingNextPage, user, hasNextPage, fetchNextPage])
 
   let content: ReactNode | ReactNode[]
 
@@ -44,9 +39,9 @@ export default function GenerationsList() {
       .fill(0)
       .map((_, index) => <GenerationListItemSkeleton key={index} />)
   } else if (!error && generationsResponse) {
-    content = generationsResponse!.data.map((generation) => (
-      <GenerationListItem key={generation.id} generation={generation} />
-    ))
+    content = generationsResponse
+      .pages!.flatMap((page) => page.data)
+      .map((generation) => <GenerationListItem key={generation.id} generation={generation} />)
   } else if (!user) {
     content = (
       <div className="flex h-full w-full items-center justify-center text-center text-gray-400">
@@ -56,8 +51,9 @@ export default function GenerationsList() {
   }
 
   return (
-    <div className="scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-white flex w-full flex-col gap-4 overflow-y-scroll rounded-3xl border border-gray-300 bg-white p-4 shadow-md">
+    <div className="scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-white flex h-full w-full flex-col gap-4 overflow-y-scroll rounded-3xl border border-gray-300 bg-white p-4 shadow-md">
       {content}
+      {isFetchingNextPage && <GenerationListItemSkeleton count={3} />}
       <div ref={sentinelRef}></div>
     </div>
   )

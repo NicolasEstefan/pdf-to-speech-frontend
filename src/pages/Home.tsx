@@ -1,7 +1,9 @@
-import { useUser } from '../store/apis/hooks/use-user'
+import GenerationForm from '../components/generation-form/GenerationForm'
 
 export default function HomePage() {
-  const { user } = useUser()
-
-  return <div>{user && `Bienvenido/a ${user.username}`}</div>
+  return (
+    <div className="flex h-full w-full items-center justify-center p-4">
+      <GenerationForm />
+    </div>
+  )
 }

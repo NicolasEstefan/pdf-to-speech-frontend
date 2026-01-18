@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom'
-import GenerationsList from '../components/generations/GenerationsList'
+import GenerationsList from '../components/generations-list/GenerationsList'
 import { IconLayoutSidebarFilled, IconX } from '@tabler/icons-react'
 import SignInWithGoogleButton from '../components/SignInWithGoogleButton'
 import { useState } from 'react'
@@ -27,7 +27,7 @@ export default function Layout() {
           </Button>
           <SignInWithGoogleButton />
         </div>
-        <main>
+        <main className="h-full w-full">
           <Outlet />
         </main>
       </div>

@@ -1,5 +1,5 @@
 import type { Generation } from '../../store/types/generation'
-import { IconDownload } from '@tabler/icons-react'
+import { IconDownload, IconLoader2 } from '@tabler/icons-react'
 import Button from '../common/Button'
 import { refreshAuth } from '../../refresh-auth'
 
@@ -25,7 +25,11 @@ export default function GenerationListItem({ generation }: GenerationListItemPro
         <span className="text-sm">{generation.status}</span>
       </div>
       <Button className="h-fit" disabled={!generation.audio} onClick={handleDownload}>
-        <IconDownload stroke={2} />
+        {generation.status === 'pending' || generation.status === 'in-progress' ? (
+          <IconLoader2 className="animate-spin text-purple-900" />
+        ) : (
+          <IconDownload stroke={2} />
+        )}
       </Button>
     </div>
   )
