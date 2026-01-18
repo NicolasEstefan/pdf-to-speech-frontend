@@ -56,7 +56,7 @@ export default function GenerationsList() {
   }
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 overflow-y-scroll rounded-3xl border border-gray-300 bg-white p-4 shadow-md">
+    <div className="scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-white flex w-full flex-col gap-4 overflow-y-scroll rounded-3xl border border-gray-300 bg-white p-4 shadow-md">
       {content}
       <div ref={sentinelRef}></div>
     </div>
