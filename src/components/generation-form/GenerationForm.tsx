@@ -8,20 +8,27 @@ import { useCreateGenerationMutation, useGetOptionsQuery } from '../../store'
 import Skeleton from 'react-loading-skeleton'
 import Button from '../common/Button'
 import ErrorText from '../common/ErrorText'
-
-const validationSchema = z
-  .object({
-    file: z.file('El PDF es requerido'),
-    speaker: z.string().nonempty(),
-    language: z.string().nonempty(),
-  })
-  .required()
-
-type FormFields = z.infer<typeof validationSchema>
+import { useTranslation } from 'react-i18next'
+import { useMemo } from 'react'
 
 export default function GenerationForm() {
   const { isLoading: isLoadingOptions, data: options } = useGetOptionsQuery()
   const [createGeneration, createGenerationResults] = useCreateGenerationMutation()
+  const { t } = useTranslation()
+
+  const validationSchema = useMemo(
+    () =>
+      z
+        .object({
+          file: z.file(t('pdf-is-required')),
+          speaker: z.string().nonempty(),
+          language: z.string().nonempty(),
+        })
+        .required(),
+    [t]
+  )
+
+  type FormFields = z.infer<typeof validationSchema>
 
   const {
     control,
@@ -43,10 +50,10 @@ export default function GenerationForm() {
   return (
     <form
       onSubmit={handleSubmit(submitHandler)}
-      className="flex flex-col gap-4 rounded-3xl border border-gray-300 bg-white p-6"
+      className="flex w-300 flex-col gap-4 rounded-3xl border border-gray-300 bg-white p-6"
     >
-      <h1 className="mb-4 text-2xl font-semibold">¡Convierte tu PDF en audio en minutos!</h1>
-      <FieldGroup label="Archivo PDF">
+      <h1 className="mb-4 text-2xl font-semibold">{t('generation-form-heading')}</h1>
+      <FieldGroup label={t('pdf-file')}>
         <Controller
           name="file"
           control={control}
@@ -54,18 +61,21 @@ export default function GenerationForm() {
         />
         {errors.file && <ErrorText>{errors.file.message}</ErrorText>}
       </FieldGroup>
-      <FieldGroup label="Idioma">
+      <FieldGroup label={t('language')}>
         {isLoadingOptions ? (
           <Skeleton width="100%" height={40} borderRadius={12} />
         ) : (
           <SelectField
             {...register('language')}
-            options={options!.languages.map((language) => ({ label: language, value: language }))}
+            options={options!.languages.map((language) => ({
+              label: t(`languages.${language}`),
+              value: language,
+            }))}
           />
         )}
         {errors.language && <ErrorText>{errors.language.message}</ErrorText>}
       </FieldGroup>
-      <FieldGroup label="Voz">
+      <FieldGroup label={t('voice')}>
         {isLoadingOptions ? (
           <Skeleton width="100%" height={40} borderRadius={12} />
         ) : (
@@ -77,7 +87,7 @@ export default function GenerationForm() {
         {errors.speaker && <ErrorText>{errors.speaker.message}</ErrorText>}
       </FieldGroup>
       <div className="flex justify-end">
-        <Button disabled={isFormDisabled}>Generar audio</Button>
+        <Button disabled={isFormDisabled}>{t('generate-audio')}</Button>
       </div>
     </form>
   )

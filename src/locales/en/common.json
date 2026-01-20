@@ -1,0 +1,20 @@
+{
+  "generation-form-heading": "Turn your PDF into an audio book in minutes!",
+  "generation-status": {
+    "done": "Done",
+    "in-progress": "Processing...",
+    "failed": "Error"
+  },
+  "generate-audio": "Generate audio",
+  "language": "Language",
+  "languages": {
+    "english": "English",
+    "spanish": "Spanish"
+  },
+  "voice": "Voice",
+  "pdf-file": "PDF file",
+  "sign-in-with-google": "Sign in with Google",
+  "sign-out": "Sign out",
+  "sign-in-to-see-generations": "Sign in to see your audio generations",
+  "pdf-file-required": "The PDF file is required"
+}

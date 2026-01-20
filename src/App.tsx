@@ -4,13 +4,14 @@ import HomePage from './pages/Home'
 import { Provider } from 'react-redux'
 import { store } from './store'
 import 'react-loading-skeleton/dist/skeleton.css'
+import './i18n'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
-    children: [{ index: true, element: <HomePage /> }]
-  }
+    children: [{ index: true, element: <HomePage /> }],
+  },
 ])
 
 function App() {
