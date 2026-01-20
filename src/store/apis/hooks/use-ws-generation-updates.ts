@@ -52,5 +52,5 @@ export const useWsGenerationUpdates = () => {
     return () => {
       socket.disconnect()
     }
-  }, [dispatch])
+  }, [dispatch, user])
 }
