@@ -4,6 +4,7 @@ import { socket } from '../../../socket'
 import type { GenerationStatus } from '../../types/generation'
 import { generationsApi } from '../genereations-api'
 import { useAppDispatch } from '../../hooks'
+import { useUser } from './use-user'
 
 interface GenerationProgress {
   generationId: string
@@ -14,8 +15,13 @@ interface GenerationProgress {
 
 export const useWsGenerationUpdates = () => {
   const dispatch = useAppDispatch()
+  const { user } = useUser()
 
   useEffect(() => {
+    if (!user) {
+      return
+    }
+
     socket.connect()
 
     socket.on('generation-progress', (progressReport: GenerationProgress) => {

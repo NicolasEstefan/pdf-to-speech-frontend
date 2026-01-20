@@ -16,7 +16,7 @@ export default function GenerationsList() {
     data: generationsResponse,
     error,
     fetchNextPage,
-  } = useGetGenerationsInfiniteQuery()
+  } = useGetGenerationsInfiniteQuery(undefined, { skip: !user })
 
   useWsGenerationUpdates()
 
