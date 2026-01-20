@@ -21,7 +21,7 @@ export default function DropzoneField({
   return (
     <div
       {...getRootProps()}
-      className="flex h-50 w-full cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-400 p-4 md:h-100"
+      className="flex h-50 w-full cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-400 p-4 shadow-md md:h-100"
     >
       <input {...getInputProps()} />
       {value ? (

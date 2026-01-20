@@ -50,7 +50,7 @@ export default function GenerationForm() {
   return (
     <form
       onSubmit={handleSubmit(submitHandler)}
-      className="flex w-300 flex-col gap-4 rounded-3xl border border-gray-300 bg-white p-6"
+      className="flex w-300 flex-col gap-4 rounded-3xl border border-gray-300 bg-white p-6 shadow-md"
     >
       <h1 className="mb-4 text-2xl font-semibold">{t('generation-form-heading')}</h1>
       <FieldGroup label={t('pdf-file')}>
