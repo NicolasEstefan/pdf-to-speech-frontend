@@ -7,10 +7,11 @@ import { SelectField } from '../common/SelectField'
 import { useCreateGenerationMutation, useGetOptionsQuery } from '../../store'
 import Skeleton from 'react-loading-skeleton'
 import Button from '../common/Button'
+import ErrorText from '../common/ErrorText'
 
 const validationSchema = z
   .object({
-    file: z.file(),
+    file: z.file('El PDF es requerido'),
     speaker: z.string().nonempty(),
     language: z.string().nonempty(),
   })
@@ -22,7 +23,13 @@ export default function GenerationForm() {
   const { isLoading: isLoadingOptions, data: options } = useGetOptionsQuery()
   const [createGeneration, createGenerationResults] = useCreateGenerationMutation()
 
-  const { control, handleSubmit, register, reset } = useForm<FormFields>({
+  const {
+    control,
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<FormFields>({
     resolver: zodResolver(validationSchema),
   })
 
@@ -30,6 +37,8 @@ export default function GenerationForm() {
     await createGeneration(fields)
     reset()
   }
+
+  const isFormDisabled = createGenerationResults.isLoading || isSubmitting
 
   return (
     <form
@@ -43,6 +52,7 @@ export default function GenerationForm() {
           control={control}
           render={({ field }) => <DropzoneField {...field} />}
         />
+        {errors.file && <ErrorText>{errors.file.message}</ErrorText>}
       </FieldGroup>
       <FieldGroup label="Idioma">
         {isLoadingOptions ? (
@@ -53,6 +63,7 @@ export default function GenerationForm() {
             options={options!.languages.map((language) => ({ label: language, value: language }))}
           />
         )}
+        {errors.language && <ErrorText>{errors.language.message}</ErrorText>}
       </FieldGroup>
       <FieldGroup label="Voz">
         {isLoadingOptions ? (
@@ -63,9 +74,10 @@ export default function GenerationForm() {
             options={options!.speakers.map((speaker) => ({ label: speaker, value: speaker }))}
           />
         )}
+        {errors.speaker && <ErrorText>{errors.speaker.message}</ErrorText>}
       </FieldGroup>
       <div className="flex justify-end">
-        <Button disabled={createGenerationResults.isLoading}>Generar audio</Button>
+        <Button disabled={isFormDisabled}>Generar audio</Button>
       </div>
     </form>
   )

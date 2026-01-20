@@ -3,6 +3,7 @@ import { useGetGenerationsInfiniteQuery } from '../../store'
 import { useUser } from '../../store/apis/hooks/use-user'
 import GenerationListItem from './GenerationListItem'
 import GenerationListItemSkeleton from './GenerationListItemSkeleton'
+import { useWsGenerationUpdates } from '../../store/apis/hooks/use-ws-generation-updates'
 
 export default function GenerationsList() {
   const sentinelRef = useRef<HTMLDivElement | null>(null)
@@ -16,6 +17,8 @@ export default function GenerationsList() {
     error,
     fetchNextPage,
   } = useGetGenerationsInfiniteQuery()
+
+  useWsGenerationUpdates()
 
   useEffect(() => {
     if (!sentinelRef.current || !user || !hasNextPage) {

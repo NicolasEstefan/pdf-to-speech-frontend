@@ -1,12 +1,13 @@
 import type { Audio } from './audio'
 
-export type GenerationStatus = 'pending' | 'in-progress' | 'done' | 'failed'
+export type GenerationStatus = 'in-progress' | 'done' | 'failed'
 
 export interface Generation {
   id: string
   title: string
   status: GenerationStatus
   audio: Audio
+  progressPercentage: number
   createdAt: string
   updatedAt: string
 }
