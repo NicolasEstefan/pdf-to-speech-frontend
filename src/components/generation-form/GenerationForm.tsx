@@ -1,7 +1,7 @@
 import DropzoneField from '../common/DropzoneField'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import FieldGroup from '../common/FieldGroup'
 import { SelectField } from '../common/SelectField'
 import { useCreateGenerationMutation, useGetOptionsQuery } from '../../store'
@@ -9,10 +9,13 @@ import Skeleton from 'react-loading-skeleton'
 import Button from '../common/Button'
 import ErrorText from '../common/ErrorText'
 import { useTranslation } from 'react-i18next'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { IconPlayerPause, IconVolume } from '@tabler/icons-react'
 
 export default function GenerationForm() {
   const { isLoading: isLoadingOptions, data: options } = useGetOptionsQuery()
+  const sampleAudioRef = useRef<HTMLAudioElement | null>(null)
+  const [isPlayingSampleAudio, setIsPlayingSampleAudio] = useState(false)
   const [createGeneration, createGenerationResults] = useCreateGenerationMutation()
   const { t } = useTranslation()
 
@@ -36,9 +39,54 @@ export default function GenerationForm() {
     register,
     reset,
     formState: { errors, isSubmitting },
+    setValue,
   } = useForm<FormFields>({
     resolver: zodResolver(validationSchema),
   })
+
+  const speaker = useWatch({ control, name: 'speaker' })
+  const language = useWatch({ control, name: 'language' })
+
+  useEffect(() => {
+    if (!options) {
+      return
+    }
+
+    setValue('language', options.languages[0])
+    setValue('speaker', options.speakers[0])
+  }, [options, setValue])
+
+  useEffect(() => {
+    if (!speaker || !language) {
+      return
+    }
+
+    sampleAudioRef.current = new Audio(`assets/audios/${language}/${speaker}.wav`)
+
+    const onPlay = () => setIsPlayingSampleAudio(true)
+    const onPause = () => setIsPlayingSampleAudio(false)
+    const onEnded = () => setIsPlayingSampleAudio(false)
+
+    sampleAudioRef.current.addEventListener('play', onPlay)
+    sampleAudioRef.current.addEventListener('pause', onPause)
+    sampleAudioRef.current.addEventListener('ended', onEnded)
+
+    return () => {
+      sampleAudioRef.current!.removeEventListener('play', onPlay)
+      sampleAudioRef.current!.removeEventListener('pause', onPause)
+      sampleAudioRef.current!.removeEventListener('ended', onEnded)
+    }
+  }, [speaker, language])
+
+  const toggleSampleAudio = () => {
+    if (sampleAudioRef.current) {
+      if (isPlayingSampleAudio) {
+        sampleAudioRef.current.pause()
+      } else {
+        sampleAudioRef.current.play()
+      }
+    }
+  }
 
   const submitHandler = async (fields: FormFields) => {
     await createGeneration(fields)
@@ -79,17 +127,23 @@ export default function GenerationForm() {
         {isLoadingOptions ? (
           <Skeleton width="100%" height={40} borderRadius={12} />
         ) : (
-          <SelectField
-            {...register('speaker')}
-            options={options!.speakers.map((speaker) => ({
-              label: t(`speakers.${speaker}`),
-              value: speaker,
-            }))}
-          />
+          <div className="flex w-full items-center gap-4">
+            <SelectField
+              className="w-full"
+              {...register('speaker')}
+              options={options!.speakers.map((speaker) => ({
+                label: t(`speakers.${speaker}`),
+                value: speaker,
+              }))}
+            />
+            <Button onClick={toggleSampleAudio} type="button" className="p-4">
+              {isPlayingSampleAudio ? <IconPlayerPause stroke={2} /> : <IconVolume stroke={2} />}
+            </Button>
+          </div>
         )}
         {errors.speaker && <ErrorText>{errors.speaker.message}</ErrorText>}
       </FieldGroup>
-      <div className="flex justify-end">
+      <div className="mt-2 flex justify-end">
         <Button disabled={isFormDisabled}>{t('generate-audio')}</Button>
       </div>
     </form>
