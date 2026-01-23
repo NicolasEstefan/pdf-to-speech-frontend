@@ -46,7 +46,7 @@ export default function GenerationListItem({ generation }: GenerationListItemPro
         </div>
         <div className="flex items-center gap-2">
           <span
-            className={`w-fit rounded-full px-3 py-1 text-sm shadow ${statusColor[generation.status].background} ${statusColor[generation.status].text}`}
+            className={`w-fit rounded-full px-3 py-1 text-sm whitespace-nowrap shadow ${statusColor[generation.status].background} ${statusColor[generation.status].text}`}
           >
             {t(`generation-status.${generation.status}`)}{' '}
             {generation.status === 'in-progress'
