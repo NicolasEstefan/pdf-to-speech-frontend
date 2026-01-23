@@ -4,6 +4,7 @@ import { initReactI18next } from 'react-i18next'
 import enCommon from './locales/en/common.json'
 import esCommon from './locales/es/common.json'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import dayjs from 'dayjs'
 
 i18n
   .use(initReactI18next)
@@ -21,5 +22,9 @@ i18n
       },
     },
   })
+
+i18n.on('languageChanged', (lng) => {
+  dayjs.locale(lng)
+})
 
 export default i18n

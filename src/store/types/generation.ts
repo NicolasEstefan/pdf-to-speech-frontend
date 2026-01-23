@@ -7,6 +7,8 @@ export interface Generation {
   title: string
   status: GenerationStatus
   audio: Audio
+  language: string
+  speaker: string
   progressPercentage: number
   createdAt: string
   updatedAt: string

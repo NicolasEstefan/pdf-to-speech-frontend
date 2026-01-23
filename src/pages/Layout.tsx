@@ -13,7 +13,7 @@ export default function Layout() {
   }
 
   return (
-    <div className="relative z-0 flex h-screen w-full flex-col bg-purple-50 md:grid md:grid-cols-[35%_65%] lg:grid-cols-[20%_80%]">
+    <div className="relative z-0 flex h-screen w-full flex-col bg-purple-50 md:grid md:grid-cols-[35%_65%] lg:grid-cols-[25%_75%]">
       <div className={`${!showSideBar && 'hidden'} fixed inset-0 z-0 bg-black opacity-40`} />
       <div
         className={`fixed ${showSideBar ? 'left-0' : '-left-full'} col-1 mt-[17%] flex h-[90%] w-full flex-col items-end gap-2 p-6 transition-all md:relative md:left-0 md:mt-0 md:h-screen`}

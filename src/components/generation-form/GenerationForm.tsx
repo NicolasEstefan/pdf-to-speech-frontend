@@ -81,7 +81,10 @@ export default function GenerationForm() {
         ) : (
           <SelectField
             {...register('speaker')}
-            options={options!.speakers.map((speaker) => ({ label: speaker, value: speaker }))}
+            options={options!.speakers.map((speaker) => ({
+              label: t(`speakers.${speaker}`),
+              value: speaker,
+            }))}
           />
         )}
         {errors.speaker && <ErrorText>{errors.speaker.message}</ErrorText>}

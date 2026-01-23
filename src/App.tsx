@@ -4,7 +4,14 @@ import HomePage from './pages/Home'
 import { Provider } from 'react-redux'
 import { store } from './store'
 import 'react-loading-skeleton/dist/skeleton.css'
-import './i18n'
+import i18n from './i18n'
+import dayjs from 'dayjs'
+import 'dayjs/locale/en'
+import 'dayjs/locale/es'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(relativeTime)
+dayjs.locale(i18n.language)
 
 const router = createBrowserRouter([
   {
