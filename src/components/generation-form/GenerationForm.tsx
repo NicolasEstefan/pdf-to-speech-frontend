@@ -52,7 +52,7 @@ export default function GenerationForm() {
       return
     }
 
-    setValue('language', options.languages[0])
+    setValue('language', options.languages[1])
     setValue('speaker', options.speakers[0])
   }, [options, setValue])
 
