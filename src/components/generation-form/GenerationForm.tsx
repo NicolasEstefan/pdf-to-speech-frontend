@@ -47,6 +47,16 @@ export default function GenerationForm() {
   const speaker = useWatch({ control, name: 'speaker' })
   const language = useWatch({ control, name: 'language' })
 
+  const toggleSampleAudio = () => {
+    if (sampleAudioRef.current) {
+      if (isPlayingSampleAudio) {
+        sampleAudioRef.current.pause()
+      } else {
+        sampleAudioRef.current.play()
+      }
+    }
+  }
+
   useEffect(() => {
     if (!options) {
       return
@@ -61,32 +71,27 @@ export default function GenerationForm() {
       return
     }
 
-    sampleAudioRef.current = new Audio(`assets/audios/${language}/${speaker}.wav`)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsPlayingSampleAudio(false)
+
+    const audio = new Audio(`assets/audios/${language}/${speaker}.wav`)
+    sampleAudioRef.current = audio
 
     const onPlay = () => setIsPlayingSampleAudio(true)
     const onPause = () => setIsPlayingSampleAudio(false)
     const onEnded = () => setIsPlayingSampleAudio(false)
 
-    sampleAudioRef.current.addEventListener('play', onPlay)
-    sampleAudioRef.current.addEventListener('pause', onPause)
-    sampleAudioRef.current.addEventListener('ended', onEnded)
+    audio.addEventListener('play', onPlay)
+    audio.addEventListener('pause', onPause)
+    audio.addEventListener('ended', onEnded)
 
     return () => {
-      sampleAudioRef.current!.removeEventListener('play', onPlay)
-      sampleAudioRef.current!.removeEventListener('pause', onPause)
-      sampleAudioRef.current!.removeEventListener('ended', onEnded)
+      audio.pause()
+      audio.removeEventListener('play', onPlay)
+      audio.removeEventListener('pause', onPause)
+      audio.removeEventListener('ended', onEnded)
     }
   }, [speaker, language])
-
-  const toggleSampleAudio = () => {
-    if (sampleAudioRef.current) {
-      if (isPlayingSampleAudio) {
-        sampleAudioRef.current.pause()
-      } else {
-        sampleAudioRef.current.play()
-      }
-    }
-  }
 
   const submitHandler = async (fields: FormFields) => {
     await createGeneration(fields)
