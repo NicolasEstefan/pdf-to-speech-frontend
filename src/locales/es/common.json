@@ -15,7 +15,8 @@
   "pdf-file": "Archivo PDF",
   "sign-in-with-google": "Continuar con Google",
   "sign-out": "Cerrar sesión",
-  "sign-in-to-see-generations": "Inicia sesión para ver tus generaciones",
+  "sign-in-to-see-generations": "Inicia sesión para ver tus audios",
+  "no-generations-yet": "No tienes ningún audio aún",
   "pdf-is-required": "El PDF es requerido",
   "speakers": {
     "Achernar": "Ana",

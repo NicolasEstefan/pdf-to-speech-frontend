@@ -16,6 +16,7 @@
   "sign-in-with-google": "Sign in with Google",
   "sign-out": "Sign out",
   "sign-in-to-see-generations": "Sign in to see your audio generations",
+  "no-generations-yet": "You don't have any audios yet",
   "pdf-file-required": "The PDF file is required",
   "speakers": {
     "Achernar": "Anna",

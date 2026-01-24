@@ -111,7 +111,7 @@ export default function GenerationForm() {
       </FieldGroup>
       <FieldGroup label={t('language')}>
         {isLoadingOptions ? (
-          <Skeleton width="100%" height={40} borderRadius={12} />
+          <Skeleton width="100%" height={48} borderRadius={12} />
         ) : (
           <SelectField
             {...register('language')}
@@ -125,7 +125,7 @@ export default function GenerationForm() {
       </FieldGroup>
       <FieldGroup label={t('voice')}>
         {isLoadingOptions ? (
-          <Skeleton width="100%" height={40} borderRadius={12} />
+          <Skeleton width="100%" height={48} borderRadius={12} />
         ) : (
           <div className="flex w-full items-center gap-4">
             <SelectField

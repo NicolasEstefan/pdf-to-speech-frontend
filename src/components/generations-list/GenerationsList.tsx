@@ -4,8 +4,10 @@ import { useUser } from '../../store/apis/hooks/use-user'
 import GenerationListItem from './GenerationListItem'
 import GenerationListItemSkeleton from './GenerationListItemSkeleton'
 import { useWsGenerationUpdates } from '../../store/apis/hooks/use-ws-generation-updates'
+import { useTranslation } from 'react-i18next'
 
 export default function GenerationsList() {
+  const { t } = useTranslation()
   const sentinelRef = useRef<HTMLDivElement | null>(null)
 
   const { user, isLoading: isLoadingUser } = useUser()
@@ -41,14 +43,20 @@ export default function GenerationsList() {
     content = Array(5)
       .fill(0)
       .map((_, index) => <GenerationListItemSkeleton key={index} />)
-  } else if (!error && generationsResponse) {
-    content = generationsResponse
-      .pages!.flatMap((page) => page.data)
-      .map((generation) => <GenerationListItem key={generation.id} generation={generation} />)
   } else if (!user) {
     content = (
       <div className="flex h-full w-full items-center justify-center text-center text-gray-400">
-        Inicia sesión para ver tus generaciones
+        {t('sign-in-to-see-generations')}
+      </div>
+    )
+  } else if (!error && generationsResponse && generationsResponse.pages[0].totalPages > 0) {
+    content = generationsResponse
+      .pages!.flatMap((page) => page.data)
+      .map((generation) => <GenerationListItem key={generation.id} generation={generation} />)
+  } else {
+    content = (
+      <div className="flex h-full w-full items-center justify-center text-center text-gray-400">
+        {t('no-generations-yet')}
       </div>
     )
   }
