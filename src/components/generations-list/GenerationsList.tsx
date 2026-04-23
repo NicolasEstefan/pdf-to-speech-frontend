@@ -49,7 +49,7 @@ export default function GenerationsList() {
         {t('sign-in-to-see-generations')}
       </div>
     )
-  } else if (!error && generationsResponse && generationsResponse.pages[0].totalPages > 0) {
+  } else if (!error && generationsResponse && (generationsResponse.pages[0]?.totalPages ?? 0) > 0) {
     content = generationsResponse
       .pages!.flatMap((page) => page.data)
       .map((generation) => <GenerationListItem key={generation.id} generation={generation} />)
