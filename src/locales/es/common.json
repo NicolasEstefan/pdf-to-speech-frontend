@@ -18,6 +18,7 @@
   "sign-in-to-see-generations": "Inicia sesión para ver tus audios",
   "no-generations-yet": "No tienes ningún audio aún",
   "pdf-is-required": "El PDF es requerido",
+  "generation-request-failed": "No se pudo iniciar la generación de audio, por favor intenta de nuevo",
   "speakers": {
     "Achernar": "Ana",
     "Achird": "Andrés",

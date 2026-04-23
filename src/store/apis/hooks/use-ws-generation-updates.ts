@@ -13,6 +13,10 @@ interface GenerationProgress {
   audioSize?: number
 }
 
+interface GenerationError {
+  generationId: string
+}
+
 export const useWsGenerationUpdates = () => {
   const dispatch = useAppDispatch()
   const { user } = useUser()
@@ -24,7 +28,7 @@ export const useWsGenerationUpdates = () => {
 
     socket.connect()
 
-    socket.on('generation-progress', (progressReport: GenerationProgress) => {
+    const onGenerationProgress = (progressReport: GenerationProgress) => {
       dispatch(
         generationsApi.util.updateQueryData('getGenerations', undefined, (draft) => {
           const generation = draft.pages
@@ -47,9 +51,30 @@ export const useWsGenerationUpdates = () => {
           }
         })
       )
-    })
+    }
+
+    const onGenerationError = (errorReport: GenerationError) => {
+      dispatch(
+        generationsApi.util.updateQueryData('getGenerations', undefined, (draft) => {
+          const generation = draft.pages
+            .flatMap((page) => page.data)
+            .find((generation) => generation.id === errorReport.generationId)
+
+          if (!generation) {
+            return
+          }
+
+          generation.status = 'failed'
+        })
+      )
+    }
+
+    socket.on('generation-progress', onGenerationProgress)
+    socket.on('generation-error', onGenerationError)
 
     return () => {
+      socket.off('generation-progress', onGenerationProgress)
+      socket.off('generation-error', onGenerationError)
       socket.disconnect()
     }
   }, [dispatch, user])

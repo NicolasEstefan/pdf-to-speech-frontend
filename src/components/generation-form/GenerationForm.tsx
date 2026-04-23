@@ -94,8 +94,10 @@ export default function GenerationForm() {
   }, [speaker, language])
 
   const submitHandler = async (fields: FormFields) => {
-    await createGeneration(fields)
-    reset()
+    const result = await createGeneration(fields)
+    if (!result.error) {
+      reset()
+    }
   }
 
   const isFormDisabled = createGenerationResults.isLoading || isSubmitting
@@ -148,6 +150,9 @@ export default function GenerationForm() {
         )}
         {errors.speaker && <ErrorText>{errors.speaker.message}</ErrorText>}
       </FieldGroup>
+      {createGenerationResults.isError && (
+        <ErrorText>{t('generation-request-failed')}</ErrorText>
+      )}
       <div className="mt-2 flex justify-end">
         <Button disabled={isFormDisabled}>{t('generate-audio')}</Button>
       </div>
