@@ -1,9 +1,10 @@
 import GenerationForm from '../components/generation-form/GenerationForm'
+import { Center } from '@mantine/core'
 
 export default function HomePage() {
   return (
-    <div className="flex h-full w-full items-center justify-center p-4">
+    <Center h="100%" p="md">
       <GenerationForm />
-    </div>
+    </Center>
   )
 }

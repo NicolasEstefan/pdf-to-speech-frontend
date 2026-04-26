@@ -5,6 +5,7 @@ import GenerationListItem from './GenerationListItem'
 import GenerationListItemSkeleton from './GenerationListItemSkeleton'
 import { useWsGenerationUpdates } from '../../store/apis/hooks/use-ws-generation-updates'
 import { useTranslation } from 'react-i18next'
+import { Center, Paper, ScrollArea, Stack, Text } from '@mantine/core'
 
 export default function GenerationsList() {
   const { t } = useTranslation()
@@ -38,34 +39,37 @@ export default function GenerationsList() {
   }, [isFetchingNextPage, user, hasNextPage, fetchNextPage])
 
   let content: ReactNode | ReactNode[]
+  let isEmpty = false
 
   if (isLoadingGenerations || isLoadingUser) {
     content = Array(5)
       .fill(0)
       .map((_, index) => <GenerationListItemSkeleton key={index} />)
   } else if (!user) {
-    content = (
-      <div className="flex h-full w-full items-center justify-center text-center text-gray-400">
-        {t('sign-in-to-see-generations')}
-      </div>
-    )
+    content = <Text c="dimmed">{t('sign-in-to-see-generations')}</Text>
+    isEmpty = true
   } else if (!error && generationsResponse && generationsResponse.pages[0].totalPages > 0) {
     content = generationsResponse
       .pages!.flatMap((page) => page.data)
       .map((generation) => <GenerationListItem key={generation.id} generation={generation} />)
   } else {
-    content = (
-      <div className="flex h-full w-full items-center justify-center text-center text-gray-400">
-        {t('no-generations-yet')}
-      </div>
-    )
+    content = <Text c="dimmed">{t('no-generations-yet')}</Text>
+    isEmpty = true
   }
 
   return (
-    <div className="scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-white flex h-full w-full flex-col gap-4 overflow-y-scroll rounded-3xl border border-gray-300 bg-white p-4 shadow-md">
-      {content}
-      {isFetchingNextPage && <GenerationListItemSkeleton count={3} />}
-      <div ref={sentinelRef}></div>
-    </div>
+    <Paper h="100%" radius="xl" withBorder shadow="md" style={{ overflow: 'hidden' }}>
+      {isEmpty ? (
+        <Center h="100%">{content}</Center>
+      ) : (
+        <ScrollArea h="100%">
+          <Stack gap="md" p="md">
+            {content}
+            {isFetchingNextPage && <GenerationListItemSkeleton count={3} />}
+            <div ref={sentinelRef} />
+          </Stack>
+        </ScrollArea>
+      )}
+    </Paper>
   )
 }

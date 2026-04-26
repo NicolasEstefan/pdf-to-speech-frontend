@@ -1,3 +1,4 @@
+import { Stack, Text } from '@mantine/core'
 import type { PropsWithChildren } from 'react'
 
 interface FieldGroupProps extends PropsWithChildren {
@@ -6,9 +7,9 @@ interface FieldGroupProps extends PropsWithChildren {
 
 export default function FieldGroup({ children, label }: FieldGroupProps) {
   return (
-    <div className="flex flex-col gap-2">
-      <label className="font-semibold">{label}</label>
+    <Stack gap="xs">
+      <Text fw={600}>{label}</Text>
       {children}
-    </div>
+    </Stack>
   )
 }

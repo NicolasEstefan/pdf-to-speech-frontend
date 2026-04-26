@@ -1,6 +1,1 @@
-@import 'tailwindcss';
-@plugin 'tailwind-scrollbar';
 
-.left-[\-100\%] {
-  left: -100%;
-}

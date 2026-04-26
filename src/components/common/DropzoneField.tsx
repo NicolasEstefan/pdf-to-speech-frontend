@@ -1,6 +1,6 @@
-import { useDropzone } from 'react-dropzone'
+import { Dropzone, PDF_MIME_TYPE } from '@mantine/dropzone'
 import { IconUpload } from '@tabler/icons-react'
-import { useState } from 'react'
+import { Group, Text } from '@mantine/core'
 
 export default function DropzoneField({
   value,
@@ -9,35 +9,28 @@ export default function DropzoneField({
   value: File | null
   onChange: (file: File | null) => void
 }) {
-  const [isDragging, setIsDragging] = useState(false)
-
-  const { getRootProps, getInputProps } = useDropzone({
-    maxFiles: 1,
-    accept: {
-      'application/pdf': ['.pdf'],
-    },
-    onDrop: (files) => {
-      onChange(files[0] ?? null)
-    },
-    onDragEnter: () => {
-      setIsDragging(true)
-    },
-    onDragLeave: () => {
-      setIsDragging(false)
-    },
-  })
-
   return (
-    <div
-      {...getRootProps()}
-      className={`${isDragging ? 'bg-purple-100' : ''} flex h-50 w-full cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-400 p-4 transition-all md:h-100`}
+    <Dropzone
+      onDrop={(files) => onChange(files[0] ?? null)}
+      accept={PDF_MIME_TYPE}
+      maxFiles={1}
+      radius="lg"
     >
-      <input {...getInputProps()} />
-      {value ? (
-        <p>{value.name}</p>
-      ) : (
-        <IconUpload className="text-gray-400" height={40} width={40} stroke={2} />
-      )}
-    </div>
+      <Group justify="center" align="center" h={150} style={{ pointerEvents: 'none' }}>
+        <Dropzone.Accept>
+          <IconUpload size={40} color="var(--mantine-color-violet-6)" stroke={2} />
+        </Dropzone.Accept>
+        <Dropzone.Reject>
+          <IconUpload size={40} color="var(--mantine-color-red-6)" stroke={2} />
+        </Dropzone.Reject>
+        <Dropzone.Idle>
+          {value ? (
+            <Text>{value.name}</Text>
+          ) : (
+            <IconUpload size={40} color="var(--mantine-color-dimmed)" stroke={2} />
+          )}
+        </Dropzone.Idle>
+      </Group>
+    </Dropzone>
   )
 }

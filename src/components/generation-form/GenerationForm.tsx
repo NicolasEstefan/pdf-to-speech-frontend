@@ -5,8 +5,7 @@ import { Controller, useForm, useWatch } from 'react-hook-form'
 import FieldGroup from '../common/FieldGroup'
 import { SelectField } from '../common/SelectField'
 import { useCreateGenerationMutation, useGetOptionsQuery } from '../../store'
-import Skeleton from 'react-loading-skeleton'
-import Button from '../common/Button'
+import { Skeleton, Paper, Stack, Title, Group, Button, ActionIcon } from '@mantine/core'
 import ErrorText from '../common/ErrorText'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -58,18 +57,13 @@ export default function GenerationForm() {
   }
 
   useEffect(() => {
-    if (!options) {
-      return
-    }
-
+    if (!options) return
     setValue('language', options.languages[1])
     setValue('speaker', options.speakers[0])
   }, [options, setValue])
 
   useEffect(() => {
-    if (!speaker || !language) {
-      return
-    }
+    if (!speaker || !language) return
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsPlayingSampleAudio(false)
@@ -101,56 +95,69 @@ export default function GenerationForm() {
   const isFormDisabled = createGenerationResults.isLoading || isSubmitting
 
   return (
-    <form
-      onSubmit={handleSubmit(submitHandler)}
-      className="flex w-300 flex-col gap-4 rounded-3xl border border-gray-300 bg-white p-6 shadow-md"
-    >
-      <h1 className="mb-4 text-2xl font-semibold">{t('generation-form-heading')}</h1>
-      <FieldGroup label={t('pdf-file')}>
-        <Controller
-          name="file"
-          control={control}
-          render={({ field }) => <DropzoneField {...field} />}
-        />
-        {errors.file && <ErrorText>{errors.file.message}</ErrorText>}
-      </FieldGroup>
-      <FieldGroup label={t('language')}>
-        {isLoadingOptions ? (
-          <Skeleton width="100%" height={48} borderRadius={12} />
-        ) : (
-          <SelectField
-            {...register('language')}
-            options={options!.languages.map((language) => ({
-              label: t(`languages.${language}`),
-              value: language,
-            }))}
-          />
-        )}
-        {errors.language && <ErrorText>{errors.language.message}</ErrorText>}
-      </FieldGroup>
-      <FieldGroup label={t('voice')}>
-        {isLoadingOptions ? (
-          <Skeleton width="100%" height={48} borderRadius={12} />
-        ) : (
-          <div className="flex w-full items-center gap-4">
-            <SelectField
-              className="w-full"
-              {...register('speaker')}
-              options={options!.speakers.map((speaker) => ({
-                label: t(`speakers.${speaker}`),
-                value: speaker,
-              }))}
+    <Paper radius="xl" withBorder shadow="md" p="xl" w={{ base: '100%', sm: 480 }}>
+      <form onSubmit={handleSubmit(submitHandler)}>
+        <Stack gap="md">
+          <Title order={2} mb="xs">
+            {t('generation-form-heading')}
+          </Title>
+
+          <FieldGroup label={t('pdf-file')}>
+            <Controller
+              name="file"
+              control={control}
+              render={({ field }) => <DropzoneField {...field} />}
             />
-            <Button onClick={toggleSampleAudio} type="button" className="p-4">
-              {isPlayingSampleAudio ? <IconPlayerPause stroke={2} /> : <IconVolume stroke={2} />}
+            {errors.file && <ErrorText>{errors.file.message}</ErrorText>}
+          </FieldGroup>
+
+          <FieldGroup label={t('language')}>
+            {isLoadingOptions ? (
+              <Skeleton height={42} radius="sm" />
+            ) : (
+              <SelectField
+                {...register('language')}
+                options={options!.languages.map((language) => ({
+                  label: t(`languages.${language}`),
+                  value: language,
+                }))}
+              />
+            )}
+            {errors.language && <ErrorText>{errors.language.message}</ErrorText>}
+          </FieldGroup>
+
+          <FieldGroup label={t('voice')}>
+            {isLoadingOptions ? (
+              <Skeleton height={42} radius="sm" />
+            ) : (
+              <Group gap="sm" wrap="nowrap">
+                <SelectField
+                  flex={1}
+                  {...register('speaker')}
+                  options={options!.speakers.map((speaker) => ({
+                    label: t(`speakers.${speaker}`),
+                    value: speaker,
+                  }))}
+                />
+                <ActionIcon onClick={toggleSampleAudio} type="button" size="xl" radius="xl">
+                  {isPlayingSampleAudio ? (
+                    <IconPlayerPause stroke={2} />
+                  ) : (
+                    <IconVolume stroke={2} />
+                  )}
+                </ActionIcon>
+              </Group>
+            )}
+            {errors.speaker && <ErrorText>{errors.speaker.message}</ErrorText>}
+          </FieldGroup>
+
+          <Group justify="flex-end" mt="xs">
+            <Button type="submit" disabled={isFormDisabled} radius="xl">
+              {t('generate-audio')}
             </Button>
-          </div>
-        )}
-        {errors.speaker && <ErrorText>{errors.speaker.message}</ErrorText>}
-      </FieldGroup>
-      <div className="mt-2 flex justify-end">
-        <Button disabled={isFormDisabled}>{t('generate-audio')}</Button>
-      </div>
-    </form>
+          </Group>
+        </Stack>
+      </form>
+    </Paper>
   )
 }
