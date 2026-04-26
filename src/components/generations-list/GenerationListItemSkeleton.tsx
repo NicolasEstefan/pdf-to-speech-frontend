@@ -1,4 +1,4 @@
-import Skeleton from 'react-loading-skeleton'
+import { Group, Paper, Skeleton, Stack } from '@mantine/core'
 
 interface GenerationListItemSkeletonProps {
   count?: number
@@ -8,19 +8,14 @@ export default function GenerationListItemSkeleton({ count = 1 }: GenerationList
   return Array(count)
     .fill(0)
     .map((_, index) => (
-      <div
-        key={index}
-        className="flex justify-between rounded-xl border border-gray-300 p-4 shadow-md"
-      >
-        <div className="flex flex-col">
-          <span>
-            <Skeleton width={170} height={20} />
-          </span>
-          <span className="text-sm">
-            <Skeleton width={100} height={10} />
-          </span>
-        </div>
-        <Skeleton circle width={50} height={50} />
-      </div>
+      <Paper key={index} radius="lg" withBorder shadow="sm" p="md">
+        <Group justify="space-between">
+          <Stack gap={6}>
+            <Skeleton height={18} width={170} radius="sm" />
+            <Skeleton height={12} width={100} radius="sm" />
+          </Stack>
+          <Skeleton circle height={42} width={42} />
+        </Group>
+      </Paper>
     ))
 }

@@ -1,26 +1,21 @@
-import classNames from 'classnames'
+import { NativeSelect } from '@mantine/core'
+import type { NativeSelectProps } from '@mantine/core'
 
-interface SelectFieldProps {
+interface SelectFieldProps extends Omit<NativeSelectProps, 'data'> {
   options: {
     label: string
     value: string | number
   }[]
-  className?: string
 }
 
-export function SelectField({ options, className, ...rest }: SelectFieldProps) {
-  const finalClassName = classNames(
-    'rounded-xl border border-gray-300 p-3 shadow-md outline-none',
-    className
-  )
-
+export function SelectField({ options, ...rest }: SelectFieldProps) {
   return (
-    <select {...rest} className={finalClassName}>
+    <NativeSelect {...rest}>
       {options.map((option) => (
-        <option key={option.label} value={option.value}>
+        <option key={String(option.value)} value={option.value}>
           {option.label}
         </option>
       ))}
-    </select>
+    </NativeSelect>
   )
 }

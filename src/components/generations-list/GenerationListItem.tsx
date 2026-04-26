@@ -1,27 +1,18 @@
 import type { Generation, GenerationStatus } from '../../store/types/generation'
-import { IconDownload, IconLoader2 } from '@tabler/icons-react'
-import Button from '../common/Button'
+import { IconDownload } from '@tabler/icons-react'
 import { refreshAuth } from '../../refresh-auth'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
+import { ActionIcon, Badge, Group, Loader, Paper, Stack, Text, Tooltip } from '@mantine/core'
 
 interface GenerationListItemProps {
   generation: Generation
 }
 
-const statusColor: Record<GenerationStatus, { text: string; background: string }> = {
-  'in-progress': {
-    text: 'text-purple-900',
-    background: 'bg-purple-200',
-  },
-  done: {
-    text: 'text-green-900',
-    background: 'bg-green-100',
-  },
-  failed: {
-    text: 'text-red-900',
-    background: 'bg-red-200',
-  },
+const statusColor: Record<GenerationStatus, string> = {
+  'in-progress': 'violet',
+  done: 'green',
+  failed: 'red',
 }
 
 export default function GenerationListItem({ generation }: GenerationListItemProps) {
@@ -38,31 +29,33 @@ export default function GenerationListItem({ generation }: GenerationListItemPro
   }
 
   return (
-    <div className="flex items-center justify-between gap-4 rounded-xl border border-gray-300 p-4 shadow-md">
-      <div className="flex w-full flex-col gap-4">
-        <div className="flex flex-col gap-2">
-          <span>{generation.title}</span>
-          <span className="text-sm">{t(`speakers.${generation.speaker}`)}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span
-            className={`w-fit rounded-full px-3 py-1 text-sm whitespace-nowrap shadow ${statusColor[generation.status].background} ${statusColor[generation.status].text}`}
-          >
-            {t(`generation-status.${generation.status}`)}{' '}
-            {generation.status === 'in-progress'
-              ? `${Math.floor(generation.progressPercentage)}%`
-              : ''}
-          </span>
-          <span className="text-sm text-gray-500">{dayjs(generation.createdAt).fromNow()}</span>
-        </div>
-      </div>
-      <Button className="relative h-fit p-4" disabled={!generation.audio} onClick={handleDownload}>
-        {generation.status === 'in-progress' ? (
-          <IconLoader2 className="animate-spin text-purple-900" />
-        ) : (
-          <IconDownload stroke={2} />
-        )}
-      </Button>
-    </div>
+    <Paper radius="lg" withBorder shadow="sm" p="md">
+      <Group justify="space-between" gap="md" wrap="nowrap">
+        <Stack gap="sm" style={{ flex: 1, minWidth: 0 }}>
+          <Stack gap={4}>
+            <Tooltip label={generation.title} openDelay={400}>
+              <Text truncate>{generation.title}</Text>
+            </Tooltip>
+            <Text size="sm" c="dimmed">
+              {t(`speakers.${generation.speaker}`)}
+            </Text>
+          </Stack>
+          <Group gap="xs">
+            <Badge color={statusColor[generation.status]} variant="light" radius="xl">
+              {t(`generation-status.${generation.status}`)}{' '}
+              {generation.status === 'in-progress'
+                ? `${Math.floor(generation.progressPercentage)}%`
+                : ''}
+            </Badge>
+            <Text size="sm" c="dimmed">
+              {dayjs(generation.createdAt).fromNow()}
+            </Text>
+          </Group>
+        </Stack>
+        <ActionIcon size="xl" radius="xl" disabled={!generation.audio} onClick={handleDownload}>
+          {generation.status === 'in-progress' ? <Loader size="sm" /> : <IconDownload stroke={2} />}
+        </ActionIcon>
+      </Group>
+    </Paper>
   )
 }

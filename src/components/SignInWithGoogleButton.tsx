@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useLogoutMutation } from '../store'
 import { useUser } from '../store/apis/hooks/use-user'
-import Button from './common/Button'
+import { Button } from '@mantine/core'
 import { IconBrandGoogleFilled } from '@tabler/icons-react'
 
 export default function SignInWithGoogleButton() {
@@ -18,21 +18,19 @@ export default function SignInWithGoogleButton() {
     window.location.reload()
   }
 
-  if (isFetching) {
-    return
+  if (isFetching) return null
+
+  if (user) {
+    return (
+      <Button onClick={handleSignOut} disabled={logoutResults.isLoading} radius="xl">
+        {t('sign-out')}
+      </Button>
+    )
   }
 
-  const signInButton = (
-    <Button onClick={handleSignIn} className="flex items-center justify-center gap-2 font-semibold">
-      <IconBrandGoogleFilled width={35} /> {t('sign-in-with-google')}
+  return (
+    <Button onClick={handleSignIn} radius="xl" leftSection={<IconBrandGoogleFilled size={20} />}>
+      {t('sign-in-with-google')}
     </Button>
   )
-
-  const signOutButton = (
-    <Button onClick={handleSignOut} disabled={logoutResults.isLoading} className="font-semibold">
-      {t('sign-out')}
-    </Button>
-  )
-
-  return user ? signOutButton : signInButton
 }
