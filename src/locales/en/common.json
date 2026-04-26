@@ -18,6 +18,7 @@
   "sign-in-to-see-generations": "Sign in to see your audio generations",
   "no-generations-yet": "You don't have any audios yet",
   "pdf-file-required": "The PDF file is required",
+  "generation-request-failed": "Failed to start audio generation, please try again",
   "speakers": {
     "Achernar": "Anna",
     "Achird": "Andrew",

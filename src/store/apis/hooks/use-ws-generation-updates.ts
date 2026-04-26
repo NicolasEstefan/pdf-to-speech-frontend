@@ -24,7 +24,7 @@ export const useWsGenerationUpdates = () => {
 
     socket.connect()
 
-    socket.on('generation-progress', (progressReport: GenerationProgress) => {
+    const onGenerationProgress = (progressReport: GenerationProgress) => {
       dispatch(
         generationsApi.util.updateQueryData('getGenerations', undefined, (draft) => {
           const generation = draft.pages
@@ -47,9 +47,12 @@ export const useWsGenerationUpdates = () => {
           }
         })
       )
-    })
+    }
+
+    socket.on('generation-progress', onGenerationProgress)
 
     return () => {
+      socket.off('generation-progress', onGenerationProgress)
       socket.disconnect()
     }
   }, [dispatch, user])

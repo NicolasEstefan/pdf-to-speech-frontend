@@ -48,7 +48,7 @@ export default function GenerationsList() {
   } else if (!user) {
     content = <Text c="dimmed">{t('sign-in-to-see-generations')}</Text>
     isEmpty = true
-  } else if (!error && generationsResponse && generationsResponse.pages[0].totalPages > 0) {
+  } else if (!error && generationsResponse && (generationsResponse.pages[0]?.totalPages ?? 0) > 0) {
     content = generationsResponse
       .pages!.flatMap((page) => page.data)
       .map((generation) => <GenerationListItem key={generation.id} generation={generation} />)
